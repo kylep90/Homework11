@@ -15,23 +15,44 @@ module.exports = function (app){ //app - represents express
         
     })
 
-    app.post("/api/notes", (req, res)=> {
-        const data = req.body
-        console.log(JSON.parse(data))
-        fs.writeFile("../Develop/db/db.json", data, (err, data)=> {
-            if (err) throw err;
-            console.log(data);
-        // const dataJson = JSON.parse(data);
-        
-        db.push(data);
-        res.json(db);
-        console.log(db);
-
+    app.get("/api/notes/:id", (req, res)=>{
+        const info = parseInt(req.params.id);
+        console.log("Info:", info)
+        var need
+        fs.readFile("../Develop/db/db.json", (err, data)=>{ 
+            need = db[info]; //Why do I need to use db and not data?
+            console.log("Need:",need);
+        })
+        res.json(need);
     })
+
+    app.post("/api/notes", (req, res)=> {
+        var newdata = req.body
+        const number = db.length + 1;
+        newdata.id = number;
+        console.log("Original data", newdata, number);
+        console.log(typeof newdata)
+        fs.readFile("../Develop/db/db.json", (err, data) =>{
+
+            var json = JSON.parse(data);
+            console.log(data)
+            json.push(newdata);
+            console.log("All notes: ", json);
+            
+            fs.writeFile("../Develop/db/db.json", JSON.stringify(json),(err) => {
+                if (err) throw err;
+                console.log('The file has been saved!');
+              });
+            res.send(json);
+
+
+        })
+        
 })
     
     app.delete("/api/notes/:id", (req, res)=>{
         const info = db.find(c => c.id === parseInt(req.params.id));
+        console.log(info);
         if (!info) 
         return res.send("Note not found");
 

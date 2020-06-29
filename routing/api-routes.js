@@ -1,5 +1,4 @@
-// var notes = require("../db/notes.js")
-// const server = require("../server.js");
+
 var db = require("../db/db.json");
 const fs = require("fs");
 console.log(db)
@@ -7,10 +6,9 @@ console.log(db)
 module.exports = function (app){ //app - represents express
     app.get("/api/notes", (req, res)=>{
         fs.readFile("../Develop/db/db.json", (err, data)=> {
-            console.log("Data as a string", data);
-            const dataJson = JSON.parse(data);
-            console.log("DataJSON as a string:", dataJson);
-          res.json(dataJson);        //display the notes data in json format.  
+            console.log("Data as a string", db);
+
+          res.json(db);        //display the notes data in json format.  
         });
         
     })
@@ -33,17 +31,14 @@ module.exports = function (app){ //app - represents express
         console.log("Original data", newdata, number);
         console.log(typeof newdata)
         fs.readFile("../Develop/db/db.json", (err, data) =>{
+            console.log("Data as a string", db);
 
-            var json = JSON.parse(data);
-            console.log(data)
-            json.push(newdata);
-            console.log("All notes: ", json);
+            console.log("Liner 39",db)
+            db.push(newdata);
+            console.log("All notes: ", db);
             
-            fs.writeFile("../Develop/db/db.json", JSON.stringify(json),(err) => {
-                if (err) throw err;
-                console.log('The file has been saved!');
-              });
-            res.send(json);
+
+            res.send(db);
 
 
         })
@@ -61,5 +56,5 @@ module.exports = function (app){ //app - represents express
 
         res.send(info);
     })
-    // })
+ 
 }
